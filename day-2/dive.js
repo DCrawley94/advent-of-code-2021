@@ -9,6 +9,8 @@ const data = fs
 		return [direction, +units];
 	});
 
+// data format: [['forward', 5], ['up', 2] ...etc.]
+
 // forward X increases the horizontal position by X units.
 // down X increases the depth by X units.
 // up X decreases the depth by X units.
@@ -29,10 +31,18 @@ function dive(commands) {
 	};
 
 	commands.forEach(([command, units]) => {
-		location[commandLookup[command]] += units;
+		command === 'forward'
+			? (location[commandLookup[command]] += units)
+			: command === 'down'
+			? (location[commandLookup[command]] += units)
+			: (location[commandLookup[command]] -= units);
 	});
 
 	return location;
 }
+
+const testLocation = dive(data);
+
+console.log(testLocation.depth * testLocation.horizontalPos);
 
 module.exports = { dive };
