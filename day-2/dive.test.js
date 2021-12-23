@@ -1,4 +1,4 @@
-const { dive } = require('./dive');
+const { dive, diveMk2 } = require('./dive');
 const fs = require('fs');
 
 const data = fs
@@ -34,5 +34,37 @@ describe('dive()', () => {
 				['forward', 2]
 			])
 		).toEqual({ depth: 10, horizontalPos: 15 });
+	});
+});
+
+describe.only('diveMk2()', () => {
+	test('returns initial position if data length < 1', () => {
+		expect(diveMk2([])).toEqual({ depth: 0, horizontalPos: 0, aim: 0 });
+	});
+	test('"down" command should increase aim by given integer', () => {
+		expect(diveMk2([['down', 5]])).toEqual({
+			depth: 0,
+			horizontalPos: 0,
+			aim: 5
+		});
+	});
+	test('"up" command shoudl decrease aim by given integer', () => {
+		expect(diveMk2([['up', 3]])).toEqual({
+			depth: 0,
+			horizontalPos: 0,
+			aim: -3
+		});
+	});
+	test('"forward" should increase horizontal position by given units AND increase depth by the aim multiplied by given units', () => {
+		expect(
+			diveMk2([
+				['down', 3],
+				['forward', 5]
+			])
+		).toEqual({
+			depth: 15,
+			horizontalPos: 5,
+			aim: 3
+		});
 	});
 });

@@ -22,7 +22,7 @@ horizontal position: 0
 */
 
 function dive(commands) {
-	const location = { depth: 0, horizontalPos: 0 };
+	const locationInfo = { depth: 0, horizontalPos: 0 };
 
 	const commandLookup = {
 		forward: 'horizontalPos',
@@ -32,17 +32,37 @@ function dive(commands) {
 
 	commands.forEach(([command, units]) => {
 		command === 'forward'
-			? (location[commandLookup[command]] += units)
+			? (locationInfo[commandLookup[command]] += units)
 			: command === 'down'
-			? (location[commandLookup[command]] += units)
-			: (location[commandLookup[command]] -= units);
+			? (locationInfo[commandLookup[command]] += units)
+			: (locationInfo[commandLookup[command]] -= units);
 	});
 
-	return location;
+	return locationInfo;
 }
 
-const testLocation = dive(data);
+function diveMk2(commands) {
+	const locationInfo = { depth: 0, horizontalPos: 0, aim: 0 };
 
-console.log(testLocation.depth * testLocation.horizontalPos);
+	for (let i = 0; i < commands.length; i++) {
+		const [command, units] = commands[i];
 
-module.exports = { dive };
+		switch (command) {
+			case 'down':
+				locationInfo.aim += units;
+				break;
+			case 'up':
+				locationInfo.aim -= units;
+				break;
+			case 'forward':
+				locationInfo.horizontalPos += units;
+				locationInfo.depth += locationInfo.aim * units;
+		}
+	}
+
+	return locationInfo;
+}
+
+console.log(diveMk2(data).depth * diveMk2(data).horizontalPos);
+
+module.exports = { dive, diveMk2 };
